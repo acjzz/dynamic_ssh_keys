@@ -1,0 +1,5 @@
+local_pub_key_folder: files/pubkeys
+local_priv_key_folder: files/privkeys
+remove_priv_key_on_server: false
+download_priv_key: true
+ssh_key_bits: 2048

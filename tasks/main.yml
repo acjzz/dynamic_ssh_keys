@@ -1,0 +1,24 @@
+---
+- name: Generate a ssh_key
+  sudo: yes
+  user: name={{ user_name }} generate_ssh_key=yes ssh_key_bits={{ ssh_key_bits }}
+
+- name: Creating local private keys folder
+  local_action: shell mkdir -p {{ local_priv_key_folder }}
+
+- name: Fetching spark user private key
+  sudo: yes
+  fetch: src=/home/{{ user_name }}/.ssh/id_rsa dest={{ local_priv_key_folder }}/privkey-{{ user_name }}-{{ server_name }} flat=yes
+  when: download_priv_key
+
+- name: Remove private_key
+  sudo: yes
+  file: path=/home/{{ user_name }}/.ssh/id_rsa state=absent
+  when: remove_priv_key_on_server
+
+- name: Creating local public keys folder
+  local_action: shell mkdir -p {{ local_pub_key_folder }}
+
+- name: Fetching spark user public key
+  sudo: yes
+  fetch: src=/home/{{ user_name }}/.ssh/id_rsa.pub dest={{ local_pub_key_folder }}/pubkey-{{ user_name }}-{{ server_name }} flat=yes
